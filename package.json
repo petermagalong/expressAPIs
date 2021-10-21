@@ -4,7 +4,8 @@
   "description": "tian api",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "",
+    "dev": "nodemon server"
   },
   "author": "peter christian magalong",
   "license": "ISC",
