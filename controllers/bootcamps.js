@@ -26,7 +26,7 @@ exports.getBootcamps = asyncHandler(async (req, res, next) => {
     queryStr = queryStr.replace(/\b(gt|gte|lt|lte|in)\b/g, match => `$${match}`);
 
    // finding resources
-    query = Bootcamp.find(JSON.parse(queryStr));
+    query = Bootcamp.find(JSON.parse(queryStr)).populate('courses');
 
     //Select Fields https://mongoosejs.com/docs/queries.html
     if(req.query.select){
@@ -124,10 +124,15 @@ exports.updateBootcamp = asyncHandler(async (req, res, next) => {
 //@route DEL /api/v1/bootcamps/:id
 //@access private
 exports.deleteBootcamp = asyncHandler(async (req, res, next) => {
-        const bootcamp = await Bootcamp.findByIdAndDelete(req.params.id);
+        // const bootcamp = await Bootcamp.findByIdAndDelete(req.params.id); // remove due to the cascade delete
+
+        const bootcamp = await Bootcamp.findById(req.params.id);
+
         if(!bootcamp){
             return  next(new ErrorResponse(`Bootcamp not found with id of ${req.params.id}`,404));
         }
+
+        bootcamp.remove();
         res.status(200).json({ success:true, data: {}})
     // res.status(400).send({ success: true, msg: `delete bootcamp ${req.params.id}`});
 })
